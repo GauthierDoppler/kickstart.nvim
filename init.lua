@@ -218,6 +218,15 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+-- Window management
+vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = '[W]indow focus left' })
+vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = '[W]indow focus down' })
+vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = '[W]indow focus up' })
+vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = '[W]indow focus right' })
+vim.keymap.set('n', '<leader>ws', '<cmd>split<CR>', { desc = '[W]indow [S]plit horizontal' })
+vim.keymap.set('n', '<leader>wv', '<cmd>vsplit<CR>', { desc = '[W]indow [V]split vertical' })
+vim.keymap.set('n', '<leader>wq', '<cmd>close<CR>', { desc = '[W]indow [Q]uit' })
+
 -- Buffer management
 vim.keymap.set('n', '<leader>bq', function() require('mini.bufremove').delete(0) end, { desc = '[B]uffer [Q]uit' })
 vim.keymap.set('n', '<leader>bn', '<cmd>BufferLineCycleNext<CR>', { desc = '[B]uffer [N]ext' })
@@ -328,6 +337,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>b', group = '[B]uffer' },
+        { '<leader>w', group = '[W]indow' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
