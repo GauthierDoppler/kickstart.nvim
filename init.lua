@@ -420,7 +420,19 @@ require('lazy').setup({
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         defaults = {
-          file_ignore_patterns = { '%.git/', 'node_modules/', '%.DS_Store' },
+          file_ignore_patterns = {
+            '%.git/',
+            'node_modules/',
+            '%.DS_Store',
+            'dist/',
+            'build/',
+            '%.next/',
+            'coverage/',
+            '__pycache__/',
+            '%.cache/',
+            'vendor/',
+            'worktrees/',
+          },
         },
         pickers = {
           find_files = { hidden = true },
@@ -918,7 +930,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
