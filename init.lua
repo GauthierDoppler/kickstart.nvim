@@ -226,6 +226,7 @@ vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = '[W]indow focus right' })
 vim.keymap.set('n', '<leader>ws', '<cmd>split<CR>', { desc = '[W]indow [S]plit horizontal' })
 vim.keymap.set('n', '<leader>wv', '<cmd>vsplit<CR>', { desc = '[W]indow [V]split vertical' })
 vim.keymap.set('n', '<leader>wq', '<cmd>close<CR>', { desc = '[W]indow [Q]uit' })
+vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = '[W]indow cycle next' })
 
 -- Buffer management
 vim.keymap.set('n', '<leader>bq', function() require('mini.bufremove').delete(0) end, { desc = '[B]uffer [Q]uit' })
