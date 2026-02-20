@@ -1,5 +1,9 @@
 return {
   {
+    'christoomey/vim-tmux-navigator',
+    event = 'VeryLazy',
+  },
+  {
     'akinsho/bufferline.nvim',
     version = '*',
     event = 'VimEnter',
