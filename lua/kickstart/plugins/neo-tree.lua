@@ -16,8 +16,21 @@ return {
   opts = {
     window = {
       width = 35,
+      mappings = {
+        ['<space>'] = 'none',
+        ['s'] = 'none',
+        ['S'] = 'none',
+        ['<C-x>'] = 'open_split',
+        ['<C-v>'] = 'open_vsplit',
+      },
     },
     filesystem = {
+      filtered_items = {
+        visible = true,
+        hide_dotfiles = false,
+        hide_gitignored = true,
+        never_show = { '.git', '.DS_Store' },
+      },
       window = {
         mappings = {
           ['\\'] = 'close_window',
