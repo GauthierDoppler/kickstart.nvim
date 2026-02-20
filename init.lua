@@ -232,6 +232,10 @@ vim.keymap.set('n', '<leader>bq', function() require('mini.bufremove').delete(0)
 vim.keymap.set('n', '<leader>bn', '<cmd>BufferLineCycleNext<CR>', { desc = '[B]uffer [N]ext' })
 vim.keymap.set('n', '<leader>bp', '<cmd>BufferLineCyclePrev<CR>', { desc = '[B]uffer [P]revious' })
 
+-- Copy file path
+vim.keymap.set('n', '<leader>cp', function() vim.fn.setreg('+', vim.fn.expand '%:~:.') end, { desc = '[C]opy relative [P]ath' })
+vim.keymap.set('n', '<leader>cP', function() vim.fn.setreg('+', vim.fn.expand '%:p') end, { desc = '[C]opy full [P]ath' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
