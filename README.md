@@ -1,5 +1,10 @@
 # kickstart.nvim
 
+## This Fork
+
+- High-level config map: `ARCHITECTURE.md`
+- LLM agent instructions: `AGENTS.md`
+
 ## Introduction
 
 A starting point for Neovim that is:
