@@ -15,6 +15,7 @@ return {
     { '<leader>e', ':Neotree toggle<CR>', desc = 'File [E]xplorer toggle', silent = true },
   },
   opts = {
+    hide_root_node = true,
     window = {
       width = 35,
       mappings = {
