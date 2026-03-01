@@ -81,6 +81,7 @@ require('lazy').setup({
         { '<leader>b', group = '[B]uffer' },
         { '<leader>w', group = '[W]indow' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+        { '<leader>m', group = '[M]arkdown' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
