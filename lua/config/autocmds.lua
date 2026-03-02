@@ -33,6 +33,13 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Trigger autoread when Neovim regains focus or a buffer is entered
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  desc = 'Check for external file changes',
+  group = vim.api.nvim_create_augroup('auto-reload-files', { clear = true }),
+  command = 'checktime',
+})
+
 -- Auto-open Neo-tree when opening a directory
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Auto-open Neo-tree when opening a directory',
