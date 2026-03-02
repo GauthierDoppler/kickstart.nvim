@@ -75,6 +75,15 @@ vim.keymap.set('n', '<leader>bQ', function()
     end
   end
 end, { desc = '[B]uffer [Q]uit all' })
+vim.keymap.set('n', '<leader>bo', function()
+  local bufremove = require 'mini.bufremove'
+  local current = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and buf ~= current and vim.bo[buf].filetype ~= 'neo-tree' then
+      bufremove.delete(buf)
+    end
+  end
+end, { desc = '[B]uffer close [O]thers' })
 
 -- Copy file path
 vim.keymap.set('n', '<leader>cp', function() vim.fn.setreg('+', vim.fn.expand '%:~:.') end, { desc = '[C]opy relative [P]ath' })
