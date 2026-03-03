@@ -122,6 +122,7 @@ require('lazy').setup({
         cond = function() return vim.fn.executable 'make' == 1 end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'nvim-telescope/telescope-live-grep-args.nvim', version = '^1.0.0' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -170,12 +171,22 @@ require('lazy').setup({
         },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
+          live_grep_args = {
+            auto_quoting = true,
+            mappings = {
+              i = {
+                ['<C-k>'] = require('telescope-live-grep-args.actions').quote_prompt(),
+                ['<C-i>'] = require('telescope-live-grep-args.actions').quote_prompt { postfix = ' --iglob ' },
+              },
+            },
+          },
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'live_grep_args')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -187,7 +198,7 @@ require('lazy').setup({
       end, { desc = '[S]earch all [F]iles (incl. ignored)' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set({ 'n', 'v' }, '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sg', require('telescope').extensions.live_grep_args.live_grep_args, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
@@ -381,6 +392,8 @@ require('lazy').setup({
         ts_ls = {},
         eslint = {},
         gopls = {},
+        pyright = {},
+        ruff = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -396,6 +409,8 @@ require('lazy').setup({
         'biome',
         'goimports',
         'rubocop',
+        'ruff',
+        'debugpy',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -434,6 +449,24 @@ require('lazy').setup({
       vim.lsp.enable 'lua_ls'
 
       vim.lsp.enable 'ruby_lsp'
+
+      -- Pyright: detect .venv in project root (for uv/poetry/etc.)
+      vim.lsp.config('pyright', {
+        on_init = function(client)
+          local root = client.workspace_folders and client.workspace_folders[1].name
+          if root then
+            local venv_python = root .. '/.venv/bin/python'
+            if vim.uv.fs_stat(venv_python) then
+              client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, {
+                python = { pythonPath = venv_python },
+              })
+            end
+          end
+        end,
+        settings = {
+          python = {},
+        },
+      })
     end,
   },
 
@@ -474,6 +507,7 @@ require('lazy').setup({
         json = { 'biome' },
         go = { 'goimports' },
         ruby = { 'rubocop' },
+        python = { 'ruff_format', 'ruff_organize_imports' },
       },
     },
   },
