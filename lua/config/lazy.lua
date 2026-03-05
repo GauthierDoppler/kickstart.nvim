@@ -664,6 +664,13 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function() return '%2l:%-2v' end
 
+      -- Always show relative path instead of absolute
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_filename = function()
+        if vim.bo.buftype == 'terminal' then return '%t' end
+        return '%f%m%r'
+      end
+
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
     end,
