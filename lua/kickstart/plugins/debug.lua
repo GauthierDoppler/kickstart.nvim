@@ -15,13 +15,38 @@ return {
     { '<leader>dO', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
     { '<leader>db', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
     { '<leader>dB', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, desc = 'Debug: Conditional Breakpoint' },
+    { '<leader>dt', function() require('dap').terminate() end, desc = 'Debug: Terminate' },
     { '<leader>du', function() require('dapui').toggle() end, desc = 'Debug: Toggle UI' },
     { '<leader>dr', function() require('dap').repl.toggle() end, desc = 'Debug: Toggle REPL' },
-    { '<leader>dl', function() require('dap').run_last() end, desc = 'Debug: Run Last' },
+    {
+      '<leader>dl',
+      function()
+        -- Wipe old dap-terminal buffers to avoid "unmodified buffer" error with integratedTerminal
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.bo[buf].buftype == 'terminal' and vim.api.nvim_buf_get_name(buf):match 'dap%-terminal' then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+        require('dap').run_last()
+      end,
+      desc = 'Debug: Run Last',
+    },
   },
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+
+    -- Find nearest node_modules binary by walking up from the current file
+    -- Returns (absolute_path, package_dir) or (nil, nil)
+    local function find_nearest(bin_path)
+      local dir = vim.fn.expand '%:p:h'
+      while dir ~= '/' do
+        local candidate = dir .. '/node_modules/' .. bin_path
+        if vim.uv.fs_stat(candidate) then return candidate, dir end
+        dir = vim.fn.fnamemodify(dir, ':h')
+      end
+      return nil, nil
+    end
 
     -- Override vscode launch.json decoder to support JSONC (inline // comments)
     -- Strips comments line-by-line, skipping // inside quoted strings
@@ -78,6 +103,34 @@ return {
               program = '${file}',
               cwd = '${workspaceFolder}',
               console = 'integratedTerminal',
+            },
+            {
+              type = 'pwa-node',
+              request = 'launch',
+              name = 'Debug vitest (current file)',
+              runtimeExecutable = 'node',
+              runtimeArgs = function()
+                local vitest = find_nearest('vitest/vitest.mjs')
+                if not vitest then
+                  vim.notify('vitest not found in any parent node_modules', vim.log.levels.ERROR)
+                  return {}
+                end
+                return { vitest, '--no-file-parallelism', 'run', vim.fn.expand '%:p' }
+              end,
+              cwd = function()
+                local _, pkg_dir = find_nearest('vitest/vitest.mjs')
+                return pkg_dir or vim.fn.getcwd()
+              end,
+              console = 'integratedTerminal',
+              resolveSourceMapLocations = { '${workspaceFolder}/**', '!**/node_modules/**' },
+            },
+            {
+              type = 'pwa-node',
+              request = 'attach',
+              name = 'Attach (port 9229)',
+              port = 9229,
+              cwd = '${workspaceFolder}',
+              resolveSourceMapLocations = { '${workspaceFolder}/**', '!**/node_modules/**' },
             },
             {
               type = 'pwa-node',
@@ -144,8 +197,7 @@ return {
     }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = function() pcall(dapui.close) end
-    dap.listeners.before.event_exited['dapui_config'] = function() pcall(dapui.close) end
+    -- UI stays open after process ends — close manually with <leader>du
 
     require('dap-go').setup {
       delve = {
