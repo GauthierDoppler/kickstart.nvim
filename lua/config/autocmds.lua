@@ -33,11 +33,15 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- Trigger autoread when Neovim regains focus or a buffer is entered
+-- Trigger autoread and refresh gitsigns when Neovim regains focus or a buffer is entered
 vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
-  desc = 'Check for external file changes',
+  desc = 'Check for external file changes and refresh gitsigns',
   group = vim.api.nvim_create_augroup('auto-reload-files', { clear = true }),
-  command = 'checktime',
+  callback = function()
+    vim.cmd 'checktime'
+    local gs = package.loaded['gitsigns']
+    if gs then gs.refresh() end
+  end,
 })
 
 -- Auto-open Neo-tree when opening a directory
