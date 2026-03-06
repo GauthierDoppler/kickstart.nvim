@@ -51,3 +51,10 @@ vim.api.nvim_create_autocmd('VimEnter', {
     end
   end,
 })
+
+-- Auto-save on focus lost or buffer leave
+vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave' }, {
+  desc = 'Auto-save on focus lost',
+  group = vim.api.nvim_create_augroup('auto-save', { clear = true }),
+  command = 'silent! wa',
+})
