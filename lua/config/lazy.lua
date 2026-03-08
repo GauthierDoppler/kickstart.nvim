@@ -399,7 +399,30 @@ require('lazy').setup({
         ts_ls = {},
         eslint = {},
         gopls = {},
-        pyright = {},
+        pyright = {
+          on_init = function(client)
+            local root = client.workspace_folders and client.workspace_folders[1].name
+            if root then
+              local venv_python = root .. '/.venv/bin/python'
+              if vim.uv.fs_stat(venv_python) then
+                client.settings = vim.tbl_deep_extend('force', client.settings, {
+                  python = { pythonPath = venv_python },
+                })
+                client:notify('workspace/didChangeConfiguration', {
+                  settings = client.settings,
+                })
+              end
+            end
+          end,
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
         ruff = {},
       }
 
@@ -457,23 +480,6 @@ require('lazy').setup({
 
       vim.lsp.enable 'ruby_lsp'
 
-      -- Pyright: detect .venv in project root (for uv/poetry/etc.)
-      vim.lsp.config('pyright', {
-        on_init = function(client)
-          local root = client.workspace_folders and client.workspace_folders[1].name
-          if root then
-            local venv_python = root .. '/.venv/bin/python'
-            if vim.uv.fs_stat(venv_python) then
-              client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, {
-                python = { pythonPath = venv_python },
-              })
-            end
-          end
-        end,
-        settings = {
-          python = {},
-        },
-      })
     end,
   },
 
