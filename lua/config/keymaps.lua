@@ -65,8 +65,8 @@ vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = '[W]indow cycle next' })
 
 -- Buffer management
 vim.keymap.set('n', '<leader>bq', function() require('mini.bufremove').delete(0) end, { desc = '[B]uffer [Q]uit' })
-vim.keymap.set('n', '<leader>bn', '<cmd>BufferLineCycleNext<CR>', { desc = '[B]uffer [N]ext' })
-vim.keymap.set('n', '<leader>bp', '<cmd>BufferLineCyclePrev<CR>', { desc = '[B]uffer [P]revious' })
+vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = '[B]uffer [N]ext' })
+vim.keymap.set('n', '<leader>bp', '<cmd>bprev<CR>', { desc = '[B]uffer [P]revious' })
 vim.keymap.set('n', '<leader>bQ', function()
   local bufremove = require 'mini.bufremove'
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do

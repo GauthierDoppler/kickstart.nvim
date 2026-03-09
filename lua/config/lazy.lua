@@ -26,34 +26,6 @@ require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
-  -- Alternatively, use `config = function() ... end` for full control over the configuration.
-  -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
-  --
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`.
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
-
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -403,14 +375,18 @@ require('lazy').setup({
           on_init = function(client)
             local root = client.workspace_folders and client.workspace_folders[1].name
             if root then
-              local venv_python = root .. '/.venv/bin/python'
-              if vim.uv.fs_stat(venv_python) then
-                client.settings = vim.tbl_deep_extend('force', client.settings, {
-                  python = { pythonPath = venv_python },
-                })
-                client:notify('workspace/didChangeConfiguration', {
-                  settings = client.settings,
-                })
+              local venv_dirs = { '.venv', 'venv', '.env', 'env' }
+              for _, dir in ipairs(venv_dirs) do
+                local venv_python = root .. '/' .. dir .. '/bin/python'
+                if vim.uv.fs_stat(venv_python) then
+                  client.settings = vim.tbl_deep_extend('force', client.settings, {
+                    python = { pythonPath = venv_python },
+                  })
+                  client:notify('workspace/didChangeConfiguration', {
+                    settings = client.settings,
+                  })
+                  break
+                end
               end
             end
           end,
@@ -711,7 +687,7 @@ require('lazy').setup({
   --
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps

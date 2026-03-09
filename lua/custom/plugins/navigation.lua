@@ -19,11 +19,4 @@ return {
       },
     },
   },
-  {
-    'nvim-neo-tree/neo-tree.nvim',
-    opts = function(_, opts)
-      opts.filesystem = opts.filesystem or {}
-      opts.filesystem.use_libuv_file_watcher = true
-    end,
-  },
 }

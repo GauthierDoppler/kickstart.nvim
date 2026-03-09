@@ -17,18 +17,6 @@ return {
   },
   opts = {
     hide_root_node = true,
-    event_handlers = {
-      {
-        event = 'file_opened',
-        handler = function(file_path)
-          local rel = vim.fn.fnamemodify(file_path, ':.')
-          local bufnr = vim.fn.bufnr(file_path)
-          if bufnr ~= -1 and rel ~= file_path then
-            vim.api.nvim_buf_set_name(bufnr, rel)
-          end
-        end,
-      },
-    },
     window = {
       width = 35,
       mappings = {
@@ -40,6 +28,7 @@ return {
       },
     },
     filesystem = {
+      use_libuv_file_watcher = true,
       filtered_items = {
         visible = true,
         hide_dotfiles = false,
