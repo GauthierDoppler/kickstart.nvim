@@ -34,7 +34,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Trigger autoread and refresh gitsigns when Neovim regains focus or a buffer is entered
-vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold' }, {
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   desc = 'Check for external file changes and refresh gitsigns',
   group = vim.api.nvim_create_augroup('auto-reload-files', { clear = true }),
   callback = function()
