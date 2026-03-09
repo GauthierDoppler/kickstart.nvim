@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 })
 
 -- Auto-save current buffer on focus lost, buffer leave, or leaving insert mode
-vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave', 'InsertLeave' }, {
+vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave', 'InsertLeave', 'TextChanged' }, {
   desc = 'Auto-save current buffer',
   group = vim.api.nvim_create_augroup('auto-save', { clear = true }),
   callback = function()

@@ -88,3 +88,66 @@ end, { desc = '[B]uffer close [O]thers' })
 -- Copy file path
 vim.keymap.set('n', '<leader>cp', function() vim.fn.setreg('+', vim.fn.expand '%:~:.') end, { desc = '[C]opy relative [P]ath' })
 vim.keymap.set('n', '<leader>cP', function() vim.fn.setreg('+', vim.fn.expand '%:p') end, { desc = '[C]opy full [P]ath' })
+
+-- IDE Cheatsheet
+vim.keymap.set('n', '<leader>?', function()
+  local lines = {
+    '',
+    '   Code ─────────────────────────────',
+    '   grd            Go to definition',
+    '   grr            Go to references',
+    '   gri            Go to implementation',
+    '   grt            Go to type definition',
+    '   gO             Document symbols',
+    '   gW             Workspace symbols',
+    '   grn            Rename symbol',
+    '   gra            Code action',
+    '   <leader>f      Format buffer',
+    '   [d  ]d         Prev / next diagnostic',
+    '',
+    '   Debug  <leader>d ─────────────────',
+    '   dc             Continue / Start',
+    '   di             Step into',
+    '   do             Step over',
+    '   dO             Step out',
+    '   db             Toggle breakpoint',
+    '   dB             Conditional breakpoint',
+    '   dt             Terminate',
+    '   du             Toggle UI',
+    '   dl             Run last',
+    '',
+    '   Git  <leader>h ──────────────────',
+    '   hs             Stage hunk',
+    '   hr             Reset hunk',
+    '   hp             Preview hunk',
+    '   hb             Blame line',
+    '   hd             Diff against index',
+    '   [c  ]c         Prev / next hunk',
+    '',
+    '   q / <Esc> to close',
+    '',
+  }
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].bufhidden = 'wipe'
+
+  local width = 42
+  local height = #lines
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = math.floor((vim.o.columns - width) / 2),
+    row = math.floor((vim.o.lines - height) / 2),
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Cheatsheet ',
+    title_pos = 'center',
+  })
+
+  local close = function() vim.api.nvim_win_close(win, true) end
+  vim.keymap.set('n', 'q', close, { buffer = buf })
+  vim.keymap.set('n', '<Esc>', close, { buffer = buf })
+end, { desc = 'IDE [?] Cheatsheet' })
