@@ -457,6 +457,15 @@ require('lazy').setup({
       })
       vim.lsp.enable 'lua_ls'
 
+      vim.lsp.config('ruby_lsp', {
+        init_options = {
+          addonSettings = {
+            ['Ruby LSP Rails'] = {
+              enablePendingMigrationsPrompt = false,
+            },
+          },
+        },
+      })
       vim.lsp.enable 'ruby_lsp'
 
     end,
