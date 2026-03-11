@@ -56,14 +56,26 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
 })
 
--- Auto-save current buffer on focus lost, buffer leave, or leaving insert mode
+-- Auto-save all modified buffers on focus lost, buffer leave, or leaving insert mode
 vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave', 'InsertLeave', 'TextChanged' }, {
-  desc = 'Auto-save current buffer',
+  desc = 'Auto-save all modified buffers',
   group = vim.api.nvim_create_augroup('auto-save', { clear = true }),
   callback = function()
-    local buf = vim.api.nvim_get_current_buf()
-    if vim.bo[buf].modified and vim.bo[buf].modifiable and vim.bo[buf].buftype == '' then
-      vim.api.nvim_buf_call(buf, function() vim.cmd 'silent! w' end)
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.bo[buf].modified and vim.bo[buf].modifiable and vim.bo[buf].buftype == '' and vim.api.nvim_buf_get_name(buf) ~= '' then
+        vim.api.nvim_buf_call(buf, function() vim.cmd 'silent! w' end)
+      end
+    end
+  end,
+})
+
+-- Force-close buffers without prompting (auto-save handles persistence)
+vim.api.nvim_create_autocmd('BufDelete', {
+  desc = 'Force-delete modified buffers since auto-save handles persistence',
+  group = vim.api.nvim_create_augroup('force-buf-delete', { clear = true }),
+  callback = function(args)
+    if vim.bo[args.buf].modified then
+      vim.bo[args.buf].modified = false
     end
   end,
 })
