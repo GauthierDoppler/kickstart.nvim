@@ -12,8 +12,7 @@ return {
   lazy = false,
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
-    { '<leader>e', ':Neotree reveal<CR>', desc = 'File [E]xplorer reveal', silent = true },
-    { '<leader>ee', ':Neotree toggle<CR>', desc = 'File [E]xplorer toggl[e]', silent = true },
+    { '<leader>e', ':Neotree toggle<CR>', desc = 'File [E]xplorer toggl[e]', silent = true },
   },
   opts = {
     hide_root_node = true,

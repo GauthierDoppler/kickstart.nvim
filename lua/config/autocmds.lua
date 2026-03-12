@@ -40,7 +40,14 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'TermClose' }, {
   callback = function()
     vim.cmd 'checktime'
     local gs = package.loaded['gitsigns']
-    if gs then gs.refresh() end
+    if gs then
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == '' then
+          pcall(gs.detach, buf)
+          pcall(gs.attach, buf)
+        end
+      end
+    end
   end,
 })
 

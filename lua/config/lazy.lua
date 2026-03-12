@@ -659,11 +659,15 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function() return '%2l:%-2v' end
 
-      -- Always show relative path instead of absolute
+      -- Always show path relative to cwd, even when LSP opens files with absolute paths
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_filename = function()
         if vim.bo.buftype == 'terminal' then return '%t' end
-        return '%f%m%r'
+        local filepath = vim.fn.expand '%:p'
+        local cwd = vim.fn.getcwd() .. '/'
+        local rel = filepath:sub(1, #cwd) == cwd and filepath:sub(#cwd + 1) or filepath
+        local flags = (vim.bo.modified and ' [+]' or '') .. (vim.bo.readonly and ' [RO]' or '')
+        return rel .. flags
       end
 
       -- ... and there is more!
