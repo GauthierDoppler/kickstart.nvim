@@ -97,6 +97,7 @@ vim.keymap.set('n', '<leader>?', function()
     '   grd            Go to definition',
     '   grr            Go to references',
     '   gri            Go to implementation',
+    '   grD            Go to source definition',
     '   grt            Go to type definition',
     '   gO             Document symbols',
     '   gW             Workspace symbols',
