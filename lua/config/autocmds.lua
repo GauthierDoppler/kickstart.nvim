@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- Folding setup for selected languages
 vim.api.nvim_create_autocmd('FileType', {
-  desc = 'Enable treesitter folding for Go, TS, and Ruby',
+  desc = 'Enable treesitter folding for Go, TS, Python, and Ruby',
   group = vim.api.nvim_create_augroup('classic_indent_folds', { clear = true }),
   pattern = {
     'go',
@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescriptreact',
     'javascript',
     'javascriptreact',
+    'python',
     'ruby',
   },
   callback = function()
