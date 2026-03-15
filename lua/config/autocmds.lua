@@ -49,6 +49,10 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'TermClose' }, {
         end
       end
     end
+    local ok, manager = pcall(require, 'neo-tree.sources.manager')
+    if ok then
+      pcall(manager.refresh, 'filesystem')
+    end
   end,
 })
 
