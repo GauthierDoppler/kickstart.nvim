@@ -106,7 +106,13 @@ return {
       local servers = {
         ts_ls = {},
         eslint = {},
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              buildFlags = { '-tags=integration' },
+            },
+          },
+        },
         pyright = {
           on_init = function(client)
             local root = client.workspace_folders and client.workspace_folders[1].name

@@ -42,13 +42,16 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'TermClose' }, {
     vim.cmd 'checktime'
     local gs = package.loaded['gitsigns']
     if gs then
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == '' then
-          pcall(gs.detach, buf)
-          pcall(gs.attach, buf)
-        end
-      end
+      pcall(gs.refresh)
     end
+  end,
+})
+
+-- Refresh neo-tree git status when Neovim regains focus
+vim.api.nvim_create_autocmd('FocusGained', {
+  desc = 'Refresh neo-tree filesystem on focus',
+  group = vim.api.nvim_create_augroup('neo-tree-refresh', { clear = true }),
+  callback = function()
     local ok, manager = pcall(require, 'neo-tree.sources.manager')
     if ok then
       pcall(manager.refresh, 'filesystem')

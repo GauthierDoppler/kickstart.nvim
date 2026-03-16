@@ -54,8 +54,7 @@ require('lazy').setup({
         { '<leader>c', group = '[C]opy' },
         { '<leader>d', group = '[D]ebug' },
         { '<leader>e', group = '[E]xplorer' },
-        { '<leader>g', group = '[G]it' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
         { '<leader>m', group = '[M]arkdown' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
@@ -123,6 +122,12 @@ require('lazy').setup({
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function() return '%2l:%-2v' end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_git = function() return '' end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_diff = function() return '' end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_fileinfo = function() return vim.bo.filetype end
 
       -- Always show path relative to cwd, even when LSP opens files with absolute paths
       ---@diagnostic disable-next-line: duplicate-set-field
