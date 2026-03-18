@@ -88,6 +88,7 @@ end, { desc = '[B]uffer close [O]thers' })
 -- Copy file path
 vim.keymap.set('n', '<leader>cp', function() vim.fn.setreg('+', vim.fn.expand '%:~:.') end, { desc = '[C]opy relative [P]ath' })
 vim.keymap.set('n', '<leader>cP', function() vim.fn.setreg('+', vim.fn.expand '%:p') end, { desc = '[C]opy full [P]ath' })
+vim.keymap.set('n', '<leader>cr', function() require('telescope.builtin').registers() end, { desc = '[C]lipboard [R]egisters (search & paste)' })
 
 -- IDE Cheatsheet
 vim.keymap.set('n', '<leader>?', function()
