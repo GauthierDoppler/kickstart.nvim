@@ -64,6 +64,7 @@ return {
       })
     end,
     keys = {
+      { '<leader>sf', function() require('fff').find_files() end, desc = '[S]earch [F]iles' },
       { '<leader>sg', function() require('fff').live_grep() end, desc = '[S]earch by [G]rep' },
       { '<leader>sw', function() require('fff').live_grep { query = vim.fn.expand '<cword>' } end, mode = { 'n', 'v' }, desc = '[S]earch current [W]ord' },
       {

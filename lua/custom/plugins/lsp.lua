@@ -43,6 +43,19 @@ return {
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
+      -- Prompt for target filename on TS "Move to file" refactoring
+      vim.lsp.commands['_typescript.moveToFileRefactoring'] = function(command, ctx)
+        local source_dir = vim.fn.expand('%:p:h')
+        local source_ext = vim.fn.expand('%:e')
+        vim.ui.input({ prompt = 'Move to: ' }, function(input)
+          if not input or input == '' then return end
+          if not input:match('%.[^/]+$') then input = input .. '.' .. source_ext end
+          table.insert(command.arguments, source_dir .. '/' .. input)
+          local client = vim.lsp.get_client_by_id(ctx.client_id)
+          if client then client.request('workspace/executeCommand', command) end
+        end)
+      end
+
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -104,7 +117,13 @@ return {
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
-        ts_ls = {},
+        vtsls = {
+          settings = {
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+            },
+          },
+        },
         eslint = {},
         gopls = {
           settings = {

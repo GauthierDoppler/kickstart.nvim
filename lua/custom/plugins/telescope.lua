@@ -92,15 +92,8 @@ return {
       pcall(require('telescope').load_extension, 'live_grep_args')
 
       -- See `:help telescope.builtin`
-      -- Grep is handled by fff.nvim (see fff.lua), file finding stays here
+      -- Grep and file finding are handled by fff.nvim (see fff.lua)
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set(
-        'n',
-        '<leader>sF',
-        function() builtin.find_files { hidden = true, no_ignore = true } end,
-        { desc = '[S]earch all [F]iles (incl. ignored)' }
-      )
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
@@ -145,10 +138,10 @@ return {
 
           -- Go to source definition (skips barrel files in TS), falls back to declaration
           vim.keymap.set('n', 'grD', function()
-            local clients = vim.lsp.get_clients { bufnr = buf, name = 'ts_ls' }
+            local clients = vim.lsp.get_clients { bufnr = buf, name = 'vtsls' }
             if #clients > 0 then
               clients[1]:exec_cmd {
-                command = '_typescript.goToSourceDefinition',
+                command = 'typescript.goToSourceDefinition',
                 arguments = { vim.uri_from_bufnr(buf), vim.lsp.util.make_position_params(0, 'utf-16').position },
               }
             else
