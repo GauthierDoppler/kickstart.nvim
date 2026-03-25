@@ -1,16 +1,5 @@
-return {
-  {
-    'crnvl96/lazydocker.nvim',
-    opts = {
-      window = {
-        settings = {
-          width = 0.9,
-          height = 0.9,
-        },
-      },
-    },
-    keys = {
-      { '<leader>gd', function() require('lazydocker').toggle() end, desc = 'LazyDocker' },
-    },
-  },
-}
+vim.keymap.set('n', '<leader>gd', function()
+  Snacks.terminal('lazydocker', { win = { width = 0.9, height = 0.9 } })
+end, { desc = 'LazyDocker' })
+
+return {}

@@ -8,12 +8,17 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
+    'antosha417/nvim-lsp-file-operations', -- LSP import updates on file rename/move
   },
   lazy = false,
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
     { '<leader>e', ':Neotree toggle<CR>', desc = 'File [E]xplorer toggl[e]', silent = true },
   },
+  config = function(_, opts)
+    require('neo-tree').setup(opts)
+    require('lsp-file-operations').setup()
+  end,
   opts = {
     hide_root_node = true,
     window = {

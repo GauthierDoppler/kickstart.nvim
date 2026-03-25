@@ -5,7 +5,7 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {},
     keys = {
-      { '<leader>st', '<cmd>TodoTelescope<cr>', desc = '[S]earch [T]odos' },
+      { '<leader>st', function() Snacks.picker.todo_comments() end, desc = '[S]earch [T]odos' },
     },
   },
 }

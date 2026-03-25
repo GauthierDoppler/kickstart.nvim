@@ -64,32 +64,15 @@ vim.keymap.set('n', '<leader>wq', '<cmd>close<CR>', { desc = '[W]indow [Q]uit' }
 vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = '[W]indow cycle next' })
 
 -- Buffer management
-vim.keymap.set('n', '<leader>bq', function() require('mini.bufremove').delete(0) end, { desc = '[B]uffer [Q]uit' })
+vim.keymap.set('n', '<leader>bq', function() Snacks.bufdelete() end, { desc = '[B]uffer [Q]uit' })
 vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = '[B]uffer [N]ext' })
 vim.keymap.set('n', '<leader>bp', '<cmd>bprev<CR>', { desc = '[B]uffer [P]revious' })
-vim.keymap.set('n', '<leader>bQ', function()
-  local bufremove = require 'mini.bufremove'
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype ~= 'neo-tree' then
-      bufremove.delete(buf)
-    end
-  end
-end, { desc = '[B]uffer [Q]uit all' })
-vim.keymap.set('n', '<leader>bo', function()
-  local bufremove = require 'mini.bufremove'
-  local current = vim.api.nvim_get_current_buf()
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) and buf ~= current and vim.bo[buf].filetype ~= 'neo-tree' then
-      bufremove.delete(buf)
-    end
-  end
-end, { desc = '[B]uffer close [O]thers' })
+vim.keymap.set('n', '<leader>bQ', function() Snacks.bufdelete.all() end, { desc = '[B]uffer [Q]uit all' })
+vim.keymap.set('n', '<leader>bo', function() Snacks.bufdelete.other() end, { desc = '[B]uffer close [O]thers' })
 
 -- Copy file path
 vim.keymap.set('n', '<leader>cp', function() vim.fn.setreg('+', vim.fn.expand '%:~:.') end, { desc = '[C]opy relative [P]ath' })
 vim.keymap.set('n', '<leader>cP', function() vim.fn.setreg('+', vim.fn.expand '%:p') end, { desc = '[C]opy full [P]ath' })
-vim.keymap.set('n', '<leader>cr', function() require('telescope.builtin').registers() end, { desc = '[C]lipboard [R]egisters (search & paste)' })
-
 -- IDE Cheatsheet
 vim.keymap.set('n', '<leader>?', function()
   local lines = {

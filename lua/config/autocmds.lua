@@ -47,30 +47,6 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'TermClose' }, {
   end,
 })
 
--- Refresh neo-tree git status when Neovim regains focus
-vim.api.nvim_create_autocmd('FocusGained', {
-  desc = 'Refresh neo-tree filesystem on focus',
-  group = vim.api.nvim_create_augroup('neo-tree-refresh', { clear = true }),
-  callback = function()
-    local ok, manager = pcall(require, 'neo-tree.sources.manager')
-    if ok then
-      pcall(manager.refresh, 'filesystem')
-    end
-  end,
-})
-
--- Auto-open Neo-tree when opening a directory
-vim.api.nvim_create_autocmd('VimEnter', {
-  desc = 'Auto-open Neo-tree when opening a directory',
-  group = vim.api.nvim_create_augroup('auto_open_neotree', { clear = true }),
-  callback = function()
-    local stats = vim.loop.fs_stat(vim.fn.argv(0))
-    if stats and stats.type == 'directory' then
-      require('neo-tree.command').execute({ action = 'focus', position = 'left', dir = vim.fn.argv(0) })
-    end
-  end,
-})
-
 -- Auto-save all modified buffers on focus lost, buffer leave, or leaving insert mode
 vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave', 'InsertLeave', 'TextChanged' }, {
   desc = 'Auto-save all modified buffers',
