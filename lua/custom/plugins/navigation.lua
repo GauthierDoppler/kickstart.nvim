@@ -13,7 +13,7 @@ return {
         autoselect_one = true,
         include_current_win = false,
         bo = {
-          filetype = { 'neo-tree', 'notify' },
+          filetype = { 'snacks_picker_list', 'snacks_notif', 'notify' },
           buftype = { 'terminal', 'quickfix' },
         },
       },
