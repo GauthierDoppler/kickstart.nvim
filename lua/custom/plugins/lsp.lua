@@ -40,18 +40,7 @@ return {
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
-      -- Prompt for target filename on TS "Move to file" refactoring
-      vim.lsp.commands['_typescript.moveToFileRefactoring'] = function(command, ctx)
-        local source_dir = vim.fn.expand('%:p:h')
-        local source_ext = vim.fn.expand('%:e')
-        vim.ui.input({ prompt = 'Move to: ' }, function(input)
-          if not input or input == '' then return end
-          if not input:match('%.[^/]+$') then input = input .. '.' .. source_ext end
-          table.insert(command.arguments, source_dir .. '/' .. input)
-          local client = vim.lsp.get_client_by_id(ctx.client_id)
-          if client then client.request('workspace/executeCommand', command) end
-        end)
-      end
+      -- Move to file handler is registered in vtsls commands below
 
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
@@ -115,6 +104,30 @@ return {
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
         vtsls = {
+          commands = {
+            -- Prompt for target filename on TS "Move to file" refactoring
+            ['_typescript.moveToFileRefactoring'] = function(command, ctx)
+              local source_dir = vim.fn.expand('%:p:h')
+              local source_ext = vim.fn.expand('%:e')
+              local cwd = vim.uv.cwd() .. '/'
+              -- Show relative path in prompt, resolve to absolute for vtsls
+              local rel_default = source_dir .. '/'
+              if vim.startswith(rel_default, cwd) then rel_default = rel_default:sub(#cwd + 1) end
+              vim.ui.input({
+                prompt = 'Move to: ',
+                default = rel_default,
+                completion = 'file',
+              }, function(input)
+                if not input or input == '' then return end
+                if not input:match('%.[^/]+$') then input = input .. '.' .. source_ext end
+                -- Make relative paths absolute from source dir
+                if not vim.startswith(input, '/') then input = cwd .. input end
+                table.insert(command.arguments, input)
+                local client = vim.lsp.get_client_by_id(ctx.client_id)
+                if client then client:exec_cmd(command) end
+              end)
+            end,
+          },
           settings = {
             vtsls = {
               enableMoveToFileCodeAction = true,
