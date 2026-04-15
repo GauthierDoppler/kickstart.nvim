@@ -5,7 +5,9 @@
 vim.keymap.set('n', '<leader>e', function() Snacks.explorer() end, { desc = 'File [E]xplorer toggl[e]' })
 vim.keymap.set('n', '\\', function() Snacks.explorer() end, { desc = 'File Explorer' })
 
--- Grep search (file finding is handled by fff.nvim)
+-- File and grep search
+vim.keymap.set('n', '<leader>sf', function() Snacks.picker.files() end, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sn', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
 vim.keymap.set('n', '<leader>sg', function() Snacks.picker.grep() end, { desc = '[S]earch by [G]rep' })
 vim.keymap.set({ 'n', 'v' }, '<leader>sw', function() Snacks.picker.grep_word() end, { desc = '[S]earch current [W]ord' })
 
@@ -28,8 +30,6 @@ vim.keymap.set(
   function() Snacks.picker.grep { buffers = true } end,
   { desc = '[S]earch [/] in Open Files' }
 )
-
--- <leader>sn is handled by fff.nvim
 
 -- LSP navigation keymaps (set per buffer on LspAttach)
 vim.api.nvim_create_autocmd('LspAttach', {
