@@ -104,9 +104,11 @@ return {
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
         vtsls = {
-          commands = {
-            -- Prompt for target filename on TS "Move to file" refactoring
-            ['_typescript.moveToFileRefactoring'] = function(command, ctx)
+          on_attach = function(client, _)
+            -- Prompt for target filename on TS "Move to file" refactoring.
+            -- Registered on client.commands so vtsls's executeCommand reaches us
+            -- instead of going through Neovim's default handler.
+            client.commands['_typescript.moveToFileRefactoring'] = function(command, ctx)
               local source_dir = vim.fn.expand('%:p:h')
               local source_ext = vim.fn.expand('%:e')
               local cwd = vim.uv.cwd() .. '/'
@@ -123,11 +125,11 @@ return {
                 -- Make relative paths absolute from source dir
                 if not vim.startswith(input, '/') then input = cwd .. input end
                 table.insert(command.arguments, input)
-                local client = vim.lsp.get_client_by_id(ctx.client_id)
-                if client then client:exec_cmd(command) end
+                local c = vim.lsp.get_client_by_id(ctx.client_id)
+                if c then c:exec_cmd(command) end
               end)
-            end,
-          },
+            end
+          end,
           settings = {
             vtsls = {
               enableMoveToFileCodeAction = true,
